@@ -7,6 +7,8 @@ import {
   BsCloudSunFill,
   BsFillSunriseFill,
   BsFillSunsetFill,
+  BsCloudRain,
+  BsSun,
 } from "react-icons/bs";
 import { TiWeatherPartlySunny, TiMap } from "react-icons/ti";
 import { FaCity } from "react-icons/fa";
@@ -19,6 +21,16 @@ import moment from "moment";
 import Image from "next/image";
 import { weatherIcons } from "./weatherIcons";
 import { WiHumidity } from "react-icons/wi";
+import { TbWind } from "react-icons/tb";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
 export default function Homepage() {
   const dispatch = useDispatch();
@@ -95,6 +107,16 @@ export default function Homepage() {
   //     console.log("Not Available");
   //   }
   // }, []);
+  const chartData =
+    todayForecast &&
+    todayForecast.hour
+      .filter((i, index) => index % 4 === 0)
+      .map((i) => {
+        return {
+          time: moment(i.time).format("hh:mm A"),
+          temp: i.temp_c,
+        };
+      });
 
   return (
     <div className={`flex flex-row w-full`}>
@@ -150,6 +172,32 @@ export default function Homepage() {
         </div>
         <div className="bg-slate-100 w-full rounded-3xl p-6 mb-6">
           <div className="font-bold text-gray-500">TODAY'S FORECAST</div>
+          <div className="py-4">
+            <ResponsiveContainer width="100%" aspect={8.0 / 2.0}>
+              <AreaChart
+                width={500}
+                height={200}
+                data={chartData}
+                margin={{
+                  top: 10,
+                  right: 30,
+                  left: 0,
+                  bottom: 0,
+                }}
+              >
+                <CartesianGrid strokeDasharray="2 2" />
+                <XAxis dataKey="time" />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  type="natural"
+                  dataKey="temp"
+                  stroke="rgb(59 130 246)"
+                  fill="rgb(96 165 250)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
           <div className="pt-6 flex justify-center">
             {todayForecast &&
               todayForecast.hour
@@ -173,11 +221,11 @@ export default function Homepage() {
                             "64x64",
                             "128x128"
                           )}`}
-                          width={70}
-                          height={70}
+                          width={50}
+                          height={50}
                         />
                       </div>
-                      <div className="text-2xl font-bold text-gray-500">
+                      <div className="text-xl font-bold text-gray-500">
                         {i.temp_c}°C
                       </div>
                     </div>
@@ -209,21 +257,41 @@ export default function Homepage() {
               </div>
             </div>
           </div>
-          <div className="flex grid-rows-2 gap-4 w-full rounded-3xl bg-slate-100 p-6">
-            <div className="w-full">
-              <div className="flex items-center font-bold text-gray-500">
-                Humidity <WiHumidity />
+          <div className="w-full text-center flex flex-col justify-around rounded-3xl bg-slate-100 p-6">
+            <div className="flex justify-around">
+              <div>
+                <div className="flex items-center font-bold text-gray-500">
+                  Humidity <WiHumidity className="ml-2" />
+                </div>
+                <div className="text-xl text-gray-600">
+                  {forecastData.data?.current.humidity + `%`}
+                </div>
               </div>
-              <div className="text-2xl">
-                {forecastData.data?.current.humidity + `%`}
+              <div>
+                <div className="flex items-center font-bold text-gray-500">
+                  UV Index <BsSun className="ml-2" />
+                </div>
+                <div className="text-xl text-gray-600">
+                  {forecastData.data?.current.uv}
+                </div>
               </div>
             </div>
-            <div className="w-full">
-              <div className="flex items-center font-bold text-gray-500">
-                Humidity <WiHumidity />
+            <div className="flex justify-around">
+              <div>
+                <div className="flex items-center font-bold text-gray-500">
+                  Wind <TbWind className="ml-2" />
+                </div>
+                <div className="text-xl text-gray-600">
+                  {forecastData.data?.current.wind_kph + ` km/h`}
+                </div>
               </div>
-              <div className="text-2xl">
-                {forecastData.data?.current.humidity + `%`}
+              <div>
+                <div className="flex items-center font-bold text-gray-500">
+                  Rain <BsCloudRain className="ml-2" />
+                </div>
+                <div className="text-xl text-gray-600">
+                  {todayForecast?.day.daily_chance_of_rain + `%`}
+                </div>
               </div>
             </div>
           </div>

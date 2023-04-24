@@ -7,9 +7,8 @@ class Services {
         `https://weatherapi-com.p.rapidapi.com/search.json?q=${value}`,
         {
           headers: {
-            "X-RapidAPI-Key":
-              "95eb392bb2mshf4b629c358b8772p1e8a3djsn49ff4ea27351",
-            "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
+            "X-RapidAPI-Key": process.env.NEXT_PUBLIC_WEATHER_API_KEY,
+            "X-RapidAPI-Host": process.env.NEXT_PUBLIC_WEATHER_API_HOST,
           },
         }
       );
@@ -26,9 +25,8 @@ class Services {
         {
           params: { ...params },
           headers: {
-            "X-RapidAPI-Key":
-              "95eb392bb2mshf4b629c358b8772p1e8a3djsn49ff4ea27351",
-            "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
+            "X-RapidAPI-Key": process.env.NEXT_PUBLIC_WEATHER_API_KEY,
+            "X-RapidAPI-Host": process.env.NEXT_PUBLIC_WEATHER_API_HOST,
           },
         }
       );
